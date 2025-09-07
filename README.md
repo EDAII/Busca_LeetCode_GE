@@ -22,9 +22,12 @@ Compilador C: GCC ≥ 10 ou Clang ≥ 12)
 gcc questao_x.c -o questao_x && ./questao_x
 
 ## Capturas de tela
-Neste tópico você deve adicionar imagens do funcionamento do projeto.  
- - As imagens devem ser salvas no repositório.
- - Imagens salvas em domínios eternos tendem a ficar indisponíveis e devem ser evitadas.   
+### Questão 1
+![Questão 1](./imgs/questao_1.png)
+### Questão 2
+![Questão 2](./imgs/questao_2.png)
+### Questão 3
+![Questão 3](./imgs/questao_3.png)
 ## Conclusões
 Aqui você diz se o algoritmo utilizado foi útil, se tem limitações, etc.
 ## Referências
