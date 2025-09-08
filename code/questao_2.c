@@ -13,3 +13,5 @@ int findMin(int* numero, int numeroTamanho) {
     }
     return numero[l];
 }
+
+// Em casos de muita repetição a complexidade fica O(n), mesmo a busca binária tendo complexidade O(logN)
