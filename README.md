@@ -26,6 +26,8 @@ gcc questao_x.c -o questao_x && ./questao_x
 ![Questão 1](./imgs/questao_1.png)
 ### Questão 2
 ![Questão 2](./imgs/questao_2.png)
+### Resposta questão 2
+![Resposta questão 2](./imgs/questao_2_resposta.png)
 ### Questão 3
 ![Questão 3](./imgs/questao_3.png)
 ## Conclusões
