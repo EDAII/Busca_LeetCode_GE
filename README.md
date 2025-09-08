@@ -4,7 +4,7 @@
 | Matrícula | Nome |  
 |-----------------------|---------------------|  
 | 20/2023663 | Gabriel Basto Bertolazi |  
-| xx/xxxxxxx | xxxx xxxx xxxxx |  
+| 18/0100271 | Emivalto da Costa Tavares Junior |  
 ## Descrição do projeto
 
 Esse repositório visa buscar a resolução dos exercícios escolhidos pela plataforma do LeetCode, com o objetivo de mostrar nossos conhecimentos aprendidos no conteúdo de grafos 1. Neles vamos aplicar conceitos e conhecimentos de lógica aprendidos na matéria de Projeto de Estruturas de dados 2 com o professor Maurício Serrano.
