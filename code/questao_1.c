@@ -1,19 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/**
- * Estrutura para armazenar o ponto de início de um intervalo
- * e seu índice original na lista de entrada.
- */
+// A estrutura para armazenar o ponto de início e o índice original permanece a mesma.
 typedef struct {
     int start;
     int original_index;
 } StartInfo;
 
-/**
- * Função de comparação para qsort.
- * Compara dois elementos StartInfo com base em seus pontos de início.
- */
+// A função de comparação para qsort permanece a mesma.
 int compareStartInfo(const void *a, const void *b) {
     StartInfo *infoA = (StartInfo *)a;
     StartInfo *infoB = (StartInfo *)b;
@@ -25,34 +19,23 @@ int compareStartInfo(const void *a, const void *b) {
         return 1;
     }
     return 0;
-    // Alternativa mais concisa, mas com risco de overflow para números muito grandes:
-    // return infoA->start - infoB->start;
 }
 
-/**
- * Nota: A assinatura da função segue o padrão do LeetCode.
- * O chamador deve liberar a memória do ponteiro retornado.
- * returnSize é um ponteiro de saída para informar o tamanho do array retornado.
- */
+// A função principal da solução permanece a mesma.
 int* findRightInterval(int** intervals, int intervalsSize, int* intervalsColSize, int* returnSize) {
-    // Define o tamanho do array de retorno
     *returnSize = intervalsSize;
     if (intervalsSize == 0) {
         return NULL;
     }
 
-    // Aloca memória para o array de resultado
     int* result = (int*)malloc(intervalsSize * sizeof(int));
     if (result == NULL) {
-        // Falha na alocação de memória
         *returnSize = 0;
         return NULL;
     }
 
-    // 1. Criar e popular o array de structs StartInfo
     StartInfo* starts = (StartInfo*)malloc(intervalsSize * sizeof(StartInfo));
     if (starts == NULL) {
-        // Falha na alocação, liberar o que já foi alocado
         free(result);
         *returnSize = 0;
         return NULL;
@@ -63,27 +46,21 @@ int* findRightInterval(int** intervals, int intervalsSize, int* intervalsColSize
         starts[i].original_index = i;
     }
 
-    // 2. Ordenar o array de structs com base nos pontos de início
     qsort(starts, intervalsSize, sizeof(StartInfo), compareStartInfo);
 
-    // 3. Iterar sobre cada intervalo original e usar busca binária
     for (int i = 0; i < intervalsSize; i++) {
         int end_point = intervals[i][1];
         
-        // Implementação da busca binária (lower_bound)
         int low = 0;
         int high = intervalsSize - 1;
         int best_index = -1;
 
         while (low <= high) {
-            int mid = low + (high - low) / 2; // Evita overflow
+            int mid = low + (high - low) / 2;
             if (starts[mid].start >= end_point) {
-                // Este é um candidato válido. Guardamos seu índice e tentamos
-                // encontrar um ainda melhor (menor) à esquerda.
                 best_index = starts[mid].original_index;
                 high = mid - 1;
             } else {
-                // O ponto de início é muito pequeno, precisamos procurar à direita.
                 low = mid + 1;
             }
         }
@@ -91,14 +68,11 @@ int* findRightInterval(int** intervals, int intervalsSize, int* intervalsColSize
         result[i] = best_index;
     }
     
-    // Libera a memória do array auxiliar que não é mais necessário
     free(starts);
-    
     return result;
 }
 
-
-// --- Função Principal para Teste ---
+// Função auxiliar para imprimir o resultado de forma legível.
 void print_array(int* arr, int size) {
     printf("[");
     for (int i = 0; i < size; i++) {
@@ -110,35 +84,82 @@ void print_array(int* arr, int size) {
     printf("]\n");
 }
 
+
+// =================================================================
+// FUNÇÃO MAIN MELHORADA PARA ENTRADA INTERATIVA
+// =================================================================
 int main() {
-    // Exemplo: intervals = [[3,4],[2,3],[1,2]]
-    int intervalsSize = 3;
-    int intervalsColSize[] = {2, 2, 2};
+    int intervalsSize;
     
-    // Alocando memória para o array de ponteiros
-    int** intervals = (int**)malloc(intervalsSize * sizeof(int*));
-    for(int i = 0; i < intervalsSize; i++) {
-        intervals[i] = (int*)malloc(intervalsColSize[i] * sizeof(int));
+    // 1. Pergunta ao usuário quantos intervalos deseja inserir
+    printf("Quantos intervalos você deseja inserir? ");
+    // Valida se a entrada é um número
+    if (scanf("%d", &intervalsSize) != 1 || intervalsSize <= 0) {
+        printf("Entrada inválida. Por favor, insira um número inteiro positivo.\n");
+        return 1; // Encerra o programa com código de erro
     }
 
-    // Populando os dados
-    intervals[0][0] = 3; intervals[0][1] = 4;
-    intervals[1][0] = 2; intervals[1][1] = 3;
-    intervals[2][0] = 1; intervals[2][1] = 2;
+    // 2. Aloca memória dinamicamente para os intervalos com base na entrada
+    int** intervals = (int**)malloc(intervalsSize * sizeof(int*));
+    if (intervals == NULL) {
+        fprintf(stderr, "Falha na alocação de memória.\n");
+        return 1;
+    }
+    // O LeetCode exige este array, então o criamos
+    int* intervalsColSize = (int*)malloc(intervalsSize * sizeof(int));
+    if (intervalsColSize == NULL) {
+        fprintf(stderr, "Falha na alocação de memória.\n");
+        free(intervals);
+        return 1;
+    }
 
+    // 3. Pede ao usuário para digitar cada intervalo
+    printf("Digite os %d intervalos no formato 'inicio fim', um por linha:\n", intervalsSize);
+    for (int i = 0; i < intervalsSize; i++) {
+        intervalsColSize[i] = 2; // Cada intervalo tem 2 colunas
+        intervals[i] = (int*)malloc(2 * sizeof(int));
+        if (intervals[i] == NULL) {
+            fprintf(stderr, "Falha na alocação de memória para o intervalo %d.\n", i);
+            // Libera toda a memória alocada até agora antes de sair
+            for (int j = 0; j < i; j++) {
+                free(intervals[j]);
+            }
+            free(intervals);
+            free(intervalsColSize);
+            return 1;
+        }
+
+        printf("Intervalo %d: ", i + 1);
+        if (scanf("%d %d", &intervals[i][0], &intervals[i][1]) != 2) {
+            printf("Formato de entrada inválido. Encerrando.\n");
+            // Libera a memória antes de sair
+            for (int j = 0; j <= i; j++) {
+                free(intervals[j]);
+            }
+            free(intervals);
+            free(intervalsColSize);
+            return 1;
+        }
+    }
+
+    // 4. Chama a função da solução e imprime o resultado
     int returnSize;
     int* result = findRightInterval(intervals, intervalsSize, intervalsColSize, &returnSize);
 
-    printf("Entrada: [[3,4],[2,3],[1,2]]\n");
-    printf("Saída: ");
-    print_array(result, returnSize); // Esperado: [-1, 0, 1]
-
-    // Liberando a memória alocada
-    free(result);
-    for(int i = 0; i < intervalsSize; i++) {
-        free(intervals[i]);
+    if (result != NULL) {
+        printf("\nResultado final (array de índices):\n");
+        print_array(result, returnSize);
+    } else {
+        printf("\nNão foi possível processar o resultado.\n");
     }
-    free(intervals);
+
+    // 5. Libera toda a memória alocada dinamicamente
+    free(result);
+    for (int i = 0; i < intervalsSize; i++) {
+        free(intervals[i]); // Libera cada linha (cada intervalo)
+    }
+    free(intervals); // Libera o array de ponteiros
+    free(intervalsColSize);
 
     return 0;
 }
