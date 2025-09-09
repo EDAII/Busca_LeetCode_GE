@@ -21,6 +21,9 @@ Compilador C: GCC ≥ 10 ou Clang ≥ 12)
 
 gcc questao_x.c -o questao_x && ./questao_x
 
+##Entrega 1
+[Apresentação 1 YouTube](https://youtu.be/89aU7mapD0k)
+
 ## Capturas de tela
 ### Questão 1
 ![Questão 1](./imgs/questao_1.png)
